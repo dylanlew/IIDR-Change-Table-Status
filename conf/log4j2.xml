@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error">
+	<Properties>
+		<Property name="log-path">log</Property>
+		<Property name="stats-path">stats</Property>
+	</Properties>
+
+	<Appenders>
+		<!-- The file-log appender logs the output from the CollectCDCStats tool -->
+		<RollingFile name="file-log" fileName="${log-path}/CollectCDCStats.log"
+			filePattern="${log-path}/SetReplicationStatus-%d{yyyy-MM-dd-HH}.log.gz">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${log-path}" maxDepth="1">
+					<IfLastModified age="7d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %c{1} - %msg%n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.ibm.replication.iidr" level="info"
+			additivity="false">
+			<appender-ref ref="console" />
+			<appender-ref ref="file-log" />
+		</Logger>
+		<Root level="debug" additivity="false">
+			<appender-ref ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
+

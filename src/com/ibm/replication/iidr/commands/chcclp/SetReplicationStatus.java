@@ -144,7 +144,7 @@ public class SetReplicationStatus {
 				script.execute(MessageFormat.format("mark capture point schema {0} table {1}",
 						new Object[] { tmTableSchema, tmTableName }));
 			else if (parms.subscriptionStatus.equals("refresh"))
-				script.execute(MessageFormat.format("flag refresh schena {0} table {1}",
+				script.execute(MessageFormat.format("flag refresh schema {0} table {1}",
 						new Object[] { tmTableSchema, tmTableName }));
 
 		}
@@ -156,7 +156,8 @@ public class SetReplicationStatus {
 
 		// Only set arguments when testing
 		if (args.length == 1 && args[0].equalsIgnoreCase("*Testing*")) {
-			args = "-d -ds CDC_Oracle_cdcdemoa -s CDC_RB -t active".split(" ");
+			// args = "-d -ds CDC_Oracle_cdcdemoa -s CDC_RB -t active".split(" ");
+			args = "-d -ds CDC_Oracle_cdcdemoa -s CDC_RB -t refresh".split(" ");
 		}
 
 		new SetReplicationStatus(args);

@@ -26,8 +26,6 @@ package com.ibm.replication.iidr.utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.commons.configuration.*;
@@ -45,40 +43,11 @@ public class Settings {
 
 	static Logger logger;
 
-	// Logging parameters
-	public int checkFrequencySeconds = 60;
-	public boolean logMetricsToDB = true;
-	public boolean logSubscriptionStatusToDB = true;
-	public boolean logEventsToDB = false;
-	public boolean logMetricsToCsv = false;
-	public boolean logSubscriptionStatusToCsv = false;
-	public boolean logEventsToCsv = true;
-
-	public int numberOfEvents = 500;
-
 	// Access Server connection parameters
 	public String asHostName = null;
 	public String asUserName = null;
 	public String asPassword = null;
 	public int asPort = 0;
-
-	// Database connection parameters
-	public String dbHostName;
-	public int dbPort;
-	public String dbDatabase;
-	public String dbUserName;
-	public String dbPassword;
-	public String dbDriverName;
-	public String dbUrl;
-	public String dbSchema;
-	public String sqlUrl;
-
-	// CSV logging parameters
-	public String csvSeparator = "|";
-
-	// Which metrics to include/exclude
-	public ArrayList<String> includeMetricsList;
-	public ArrayList<String> excludeMetricsList;
 
 	/**
 	 * Retrieve the settings from the given properties file.
@@ -101,19 +70,6 @@ public class Settings {
 		PropertiesConfiguration config = new PropertiesConfiguration(
 				System.getProperty("user.dir") + File.separatorChar + "conf" + File.separator + propertiesFile);
 
-		checkFrequencySeconds = config.getInt("checkFrequencySeconds");
-
-		logMetricsToDB = config.getBoolean("logMetricsToDB", logMetricsToDB);
-		logSubscriptionStatusToDB = config.getBoolean("logSubscriptionStatusToDB", logSubscriptionStatusToDB);
-		logEventsToDB = config.getBoolean("logEventsToDB", logEventsToDB);
-
-		logMetricsToCsv = config.getBoolean("logMetricsToCsv", logMetricsToCsv);
-		logSubscriptionStatusToCsv = config.getBoolean("logSubscriptionStatusToCsv", logSubscriptionStatusToCsv);
-		logEventsToCsv = config.getBoolean("logEventsToCsv", logEventsToCsv);
-
-		// Number of events to retrieve
-		numberOfEvents = config.getInt("numberOfEvents", numberOfEvents);
-
 		// Access Server settings
 		asHostName = config.getString("asHostName");
 		asUserName = config.getString("asUserName");
@@ -132,39 +88,6 @@ public class Settings {
 			config.save();
 		}
 
-		// Metrics to include
-		// if (includeMetrics.isEmpty())
-		// includeMetricsList = new ArrayList<String>();
-		// else
-		includeMetricsList = new ArrayList<String>(Arrays.asList(config.getStringArray("includeMetrics")));
-		includeMetricsList.removeAll(Arrays.asList(""));
-
-		// Metrics to exclude
-		excludeMetricsList = new ArrayList<String>(Arrays.asList(config.getStringArray("excludeMetrics")));
-		excludeMetricsList.removeAll(Arrays.asList(""));
-
-		// Database connection settings
-		dbHostName = config.getString("dbHostName");
-		dbPort = config.getInt("dbPort");
-		dbDatabase = config.getString("dbDatabase");
-		dbUserName = config.getString("dbUserName");
-		String encryptedDbPassword = config.getString("dbPassword");
-		dbDriverName = config.getString("dbDriverName");
-		dbUrl = config.getString("dbUrl");
-		dbSchema = config.getString("dbSchema");
-
-		try {
-			dbPassword = Encryptor.decodeAndDecrypt(encryptedDbPassword);
-		} catch (EncryptedDataException e) {
-			logger.debug("Encrypting dbPassword");
-			dbPassword = encryptedDbPassword;
-			encryptedDbPassword = Encryptor.encryptAndEncode(encryptedDbPassword);
-			config.setProperty("dbPassword", encryptedDbPassword);
-			config.save();
-		}
-
-		// CSV logging settings
-		csvSeparator = config.getString("csvSeparator", csvSeparator);
 
 		// Now report the settings
 		logSettings(config);

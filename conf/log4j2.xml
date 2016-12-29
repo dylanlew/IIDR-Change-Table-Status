@@ -2,7 +2,6 @@
 <Configuration status="error">
 	<Properties>
 		<Property name="log-path">log</Property>
-		<Property name="stats-path">stats</Property>
 	</Properties>
 
 	<Appenders>

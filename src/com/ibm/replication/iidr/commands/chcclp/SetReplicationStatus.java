@@ -138,7 +138,7 @@ public class SetReplicationStatus {
 		for (int tmTableRow = 0; tmTableRow < rsMappingsTables.getRowCount(); tmTableRow++) {
 			String tmTableSchema = rsMappingsTables.getValueAt(tmTableRow, "SCHEMA");
 			String tmTableName = rsMappingsTables.getValueAt(tmTableRow, "TABLE NAME");
-			logger.debug(
+			logger.info(
 					"Setting status of table " + tmTableSchema + "." + tmTableName + " to " + parms.subscriptionStatus);
 			if (parms.subscriptionStatus.equalsIgnoreCase("active"))
 				script.execute(MessageFormat.format("mark capture point schema {0} table {1}",
